@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shower Thoughts</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<style>
+body{font-family:-apple-system,system-ui;padding:1rem;background:#f9f9f9}
+h1{font-size:1.5rem}
+textarea,button{width:100%;font-size:1rem}
+textarea{padding:.75rem;border-radius:10px;border:1px solid #ccc}
+button{margin-top:.5rem;padding:.75rem;background:#007aff;color:white;border:none;border-radius:10px}
+ul{list-style:none;padding:0;margin-top:1rem}
+li{background:white;padding:.75rem;border-radius:10px;margin-bottom:.75rem}
+.time{font-size:.8rem;color:#666;margin-bottom:.25rem}
+</style>
+</head>
+
+<body>
+<h1>Thoughts</h1>
+
+<textarea id="input" rows="4" placeholder="Write your thought…"></textarea>
+<button onclick="saveThought()">Shower</button>
+
+<ul id="list"></ul>
+
+<script>
+const KEY="thought_log";
+
+const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
+const store=d=>localStorage.setItem(KEY,JSON.stringify(d));
+const fmt=t=>new Date(t).toLocaleString();
+
+function render(){
+list.innerHTML="";
+load().slice().reverse().forEach(e=>{
+list.innerHTML+=`<li><div class=time>${fmt(e.time)}</div>${e.text}</li>`;
+});
+}
+
+function saveThought(){
+if(!input.value.trim())return;
+const d=load();
+d.push({text:input.value.trim(),time:Date.now()});
+store(d);
+input.value="";
+render();
+}
+
+render();
+</script>
+</body>
+</html>
