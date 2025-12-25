@@ -102,7 +102,22 @@ li {
   padding: .75rem;
   border-radius: 10px;
   margin-bottom: .75rem;
+
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
+li.swiping {
+  transition: none;
+}
+
+li.delete {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
 
 .time {
   font-size: .8rem;
@@ -150,11 +165,73 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
 const store=d=>localStorage.setItem(KEY,JSON.stringify(d));
 const fmt=t=>new Date(t).toLocaleString();
 
-function render(){
-list.innerHTML="";
-load().slice().reverse().forEach(e=>{
-list.innerHTML+=`<li><div class=time>${fmt(e.time)}</div>${e.text}</li>`;
-});
+function render() {
+  list.innerHTML = "";
+
+  const thoughts = load().slice().reverse();
+
+  thoughts.forEach((entry, displayIndex) => {
+    const li = document.createElement("li");
+
+    const time = document.createElement("div");
+    time.className = "time";
+    time.textContent = fmt(entry.time);
+
+    const text = document.createElement("div");
+    text.textContent = entry.text;
+
+    li.appendChild(time);
+    li.appendChild(text);
+    list.appendChild(li);
+
+    // --- Swipe to delete logic ---
+    let startX = 0;
+    let startY = 0;
+    let deltaX = 0;
+    let swiping = false;
+
+    li.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      li.classList.add("swiping");
+    });
+
+    li.addEventListener("touchmove", e => {
+      deltaX = e.touches[0].clientX - startX;
+      const deltaY = e.touches[0].clientY - startY;
+
+      // Ignore vertical scroll
+      if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+
+      if (deltaX < 0) {
+        e.preventDefault();
+        li.style.transform = `translateX(${deltaX}px)`;
+        swiping = true;
+      }
+    });
+
+    li.addEventListener("touchend", () => {
+      li.classList.remove("swiping");
+
+      // Swipe threshold
+      if (swiping && deltaX < -80) {
+        li.classList.add("delete");
+
+        setTimeout(() => {
+          const realIndex = load().length - 1 - displayIndex;
+          const data = load();
+          data.splice(realIndex, 1);
+          store(data);
+          render();
+        }, 200);
+      } else {
+        li.style.transform = "";
+      }
+
+      swiping = false;
+      deltaX = 0;
+    });
+  });
 }
 
 function saveThought(){
