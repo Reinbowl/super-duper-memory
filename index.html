@@ -9,19 +9,111 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <style>
-body{font-family:-apple-system,system-ui;padding:1rem;background:#f9f9f9}
-h1{font-size:1.5rem}
-textarea,button{width:100%;font-size:1rem}
-textarea{padding:.75rem;border-radius:10px;border:1px solid #ccc}
-button{margin-top:.5rem;padding:.75rem;background:#007aff;color:white;border:none;border-radius:10px}
-ul{list-style:none;padding:0;margin-top:1rem}
-li{background:white;padding:.75rem;border-radius:10px;margin-bottom:.75rem}
-.time{font-size:.8rem;color:#666;margin-bottom:.25rem}
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #f9f9f9;
+  --card: #ffffff;
+  --text: #111111;
+  --subtext: #666666;
+  --border: #cccccc;
+  --button: #007aff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f10;
+    --card: #1c1c1e;
+    --text: #ffffff;
+    --subtext: #9a9a9a;
+    --border: #2c2c2e;
+    --button: #0a84ff;
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #f9f9f9;
+  --card: #ffffff;
+  --text: #111111;
+  --subtext: #666666;
+  --border: #cccccc;
+  --button: #007aff;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f0f10;
+  --card: #1c1c1e;
+  --text: #ffffff;
+  --subtext: #9a9a9a;
+  --border: #2c2c2e;
+  --button: #0a84ff;
+}
+  
+body {
+  font-family: -apple-system, system-ui;
+  padding: 1rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+textarea, button {
+  width: 100%;
+  font-size: 1rem;
+}
+
+textarea {
+  padding: .75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+button {
+  margin-top: .5rem;
+  padding: .75rem;
+  background: var(--button);
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.toggle {
+  background: none;
+  color: var(--subtext);
+  font-size: .9rem;
+  margin-bottom: .75rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+li {
+  background: var(--card);
+  padding: .75rem;
+  border-radius: 10px;
+  margin-bottom: .75rem;
+}
+
+.time {
+  font-size: .8rem;
+  color: var(--subtext);
+  margin-bottom: .25rem;
+}
 </style>
 </head>
 
 <body>
 <h1>Thoughts</h1>
+<button class="toggle" onclick="toggleTheme()">Toggle dark mode</button>
 
 <textarea id="input" rows="4" placeholder="Write your thought…"></textarea>
 <button onclick="saveThought()">Shower</button>
@@ -29,6 +121,28 @@ li{background:white;padding:.75rem;border-radius:10px;margin-bottom:.75rem}
 <ul id="list"></ul>
 
 <script>
+const THEME_KEY = "theme";
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  if (theme === "dark") {
+    document.documentElement.style.colorScheme = "dark";
+  } else {
+    document.documentElement.style.colorScheme = "light";
+  }
+}
+
+function toggleTheme() {
+  const current = localStorage.getItem(THEME_KEY);
+  const next = current === "dark" ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
+
+// Apply saved theme on load
+const savedTheme = localStorage.getItem(THEME_KEY);
+if (savedTheme) applyTheme(savedTheme);
+
 const KEY="thought_log";
 
 const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
