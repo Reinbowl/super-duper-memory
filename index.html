@@ -235,15 +235,19 @@ function render() {
 }
 
 function saveThought(){
-if(!input.value.trim())return;
-const d=load();
-d.push({text:input.value.trim(),time:Date.now()});
-store(d);
-input.value="";
-render();
+  if(!input.value.trim())return;
+  const d=load();
+  d.push({text:input.value.trim(),time:Date.now()});
+  store(d);
+  input.value="";
+  render();
 }
 
 render();
+window.addEventListener("load", () => {
+  setTimeout(() => input.focus(), 300);
+});
+
 </script>
 </body>
 </html>
