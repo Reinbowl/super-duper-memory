@@ -179,9 +179,11 @@ const fmt=t=>new Date(t).toLocaleString();
 function render() {
   list.innerHTML = "";
 
-  const thoughts = load().slice().reverse();
+  const data = load();
+  const thoughts = data.slice().reverse();
 
   thoughts.forEach((entry, displayIndex) => {
+    const realIndex = data.length - 1 - displayIndex;
     const li = document.createElement("li");
     if (entry.pinned) {
       li.classList.add("pinned");
@@ -222,7 +224,8 @@ function render() {
       if (Math.abs(deltaY) > Math.abs(deltaX)) return;
 
       // LEFT swipe → delete (only if not pinned)
-      if (deltaX < 0 && !entry.pinned) {
+      if (deltaX < 0) {
+        if (entry.pinned) return;
         e.preventDefault();
         li.style.transform = `translateX(${deltaX}px)`;
         swiping = true;
@@ -259,7 +262,6 @@ function render() {
       }
     
       li.style.transform = "";
-      swiping = false;
       deltaX = 0;
     });
   });
