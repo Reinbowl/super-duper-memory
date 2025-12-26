@@ -99,15 +99,13 @@
 </head>
 
 <body>
-<div class="container">
-  <h1>Shower Thoughts</h1>
-  <button class="toggle" onclick="toggleTheme()">Change Appearance</button>
+<h1>Shower Thoughts</h1>
+<button class="toggle" onclick="toggleTheme()">change theme</button>
 
-  <textarea id="input" rows="3" placeholder="What's on your mind?"></textarea>
-  <button onclick="saveThought()">Save Thought</button>
+<textarea id="input" rows="4" placeholder="whats the thought..."></textarea>
+<button onclick="saveThought()">shower</button>
 
-  <ul id="list"></ul>
-</div>
+<ul id="list"></ul>
 
 <script>
 const inputEl = document.getElementById('input');
@@ -139,7 +137,7 @@ function render() {
   const data = load();
 
   if (data.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No thoughts yet...</div>';
+    listEl.innerHTML = '<div class="empty-state">zero thoughts all vibes</div>';
     return;
   }
 
