@@ -199,6 +199,7 @@ function render() {
 }
 
 function saveThought() {
+  const inputEl = document.getElementById('input');
   const text = inputEl.value.trim();
   if (!text) return;
   const data = load();
