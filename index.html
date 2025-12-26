@@ -7,7 +7,8 @@
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU2hvd2VyIFRob3VnaHRzIiwic2hvcnRfbmFtZSI6IlRob3VnaHRzIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjBmMTAiLCJ0aGVtZV9jb2xvciI6IiMwZjBmMTAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ3RleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCclM0Xwn4ymJUNEL3RleHQlM0UlM0Mvc3ZnJTNFIiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a84ff' rx='20'/><text y='.9em' x='50%' text-anchor='middle' font-size='70'>🌦️</text></svg>">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU2hvd2VyIFRob3VnaHRzIiwic2hvcnRfbmFtZSI6IlRob3VnaHRzIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjBmMTAiLCJ0aGVtZV9jb2xvciI6IiMwYTg0ZmYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyUyMzBhODRmZicgcng9JzIwJy8+PHRleHQgeT0nLjllbScgeD0nNTAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LXNpemU9JzcwJz7wn4ymPC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
 
 <style>
   :root {
@@ -51,13 +52,26 @@
   
   .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: env(safe-area-inset-top, 20px) 20px 1rem 20px;
     flex-shrink: 0;
+    position: relative;
   }
   
   h1 { font-size: 1.5rem; }
+
+  .toggle {
+    background: none;
+    color: var(--subtext);
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    margin: 0;
+    width: auto;
+    border-radius: 8px;
+    position: absolute;
+    right: 20px;
+  }
 
   .list-container {
     flex: 1;
@@ -144,16 +158,6 @@
   }
   
   button:active { opacity: 0.8; }
-
-  .toggle {
-    background: none;
-    color: var(--subtext);
-    font-size: 1.25rem;
-    padding: 0.5rem;
-    margin: 0;
-    width: auto;
-    border-radius: 8px;
-  }
 </style>
 </head>
 
