@@ -7,8 +7,8 @@
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a84ff' rx='20'/><text y='.9em' x='50%' text-anchor='middle' font-size='70'>🌦️</text></svg>">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU2hvd2VyIFRob3VnaHRzIiwic2hvcnRfbmFtZSI6IlRob3VnaHRzIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjBmMTAiLCJ0aGVtZV9jb2xvciI6IiMwYTg0ZmYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyUyMzBhODRmZicgcng9JzIwJy8+PHRleHQgeT0nLjllbScgeD0nNTAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LXNpemU9JzcwJz7wn4ymPC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f10' rx='20'/><text y='.9em' x='50%' text-anchor='middle' font-size='70'>🌦️</text></svg>">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU2hvd2VyIFRob3VnaHRzIiwic2hvcnRfbmFtZSI6IlRob3VnaHRzIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjBmMTAiLCJ0aGVtZV9jb2xvciI6IiMwYTg0ZmYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyUyMzBmMGYxMCcgcng9JzIwJy8+PHRleHQgeT0nLjllbScgeD0nNTAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LXNpemU9JzcwJz7wn4ymPC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
 
 <style>
   :root {
@@ -219,6 +219,15 @@ function haptic(style = 'light') {
 const load = () => JSON.parse(localStorage.getItem(KEY) || "[]");
 const store = (d) => localStorage.setItem(KEY, JSON.stringify(d));
 
+function formatDateTime(timestamp) {
+  const date = new Date(timestamp);
+  const day = date.getDate();
+  const month = date.toLocaleString('en', { month: 'short' });
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${day} ${month} ${hours}:${minutes}`;
+}
+
 function render() {
   listEl.innerHTML = "";
   const data = load();
@@ -239,7 +248,7 @@ function render() {
     if (entry.pinned) li.classList.add("pinned");
 
     li.innerHTML = `
-      <div class="time">${new Date(entry.time).toLocaleString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'})}</div>
+      <div class="time">${formatDateTime(entry.time)}</div>
       <div class="content"></div>
       ${entry.pinned ? '<span class="pin-icon">📌</span>' : ''}
     `;
@@ -315,17 +324,8 @@ function saveThought() {
   data.push({ text, time: Date.now(), pinned: false });
   store(data);
   inputEl.value = "";
-  inputEl.blur(); // Hide keyboard after entry
   render();
 }
-
-// Allow Enter key to submit (with Shift+Enter for new line)
-inputEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    saveThought();
-  }
-});
 
 render();
 
