@@ -59,6 +59,7 @@
     color: white;
     border: none;
     border-radius: 12px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s;
@@ -175,11 +176,11 @@ function render() {
     li.addEventListener("touchend", () => {
       li.classList.remove("swiping");
       
-      if (deltaX > 100) { // Swipe Right to Pin
+      if (deltaX > 80) { // Swipe Right to Pin
         data[realIndex].pinned = !data[realIndex].pinned;
         store(data);
         render();
-      } else if (deltaX < -100 && !entry.pinned) { // Swipe Left to Delete
+      } else if (deltaX < -80 && !entry.pinned) { // Swipe Left to Delete
         li.classList.add("delete");
         setTimeout(() => {
           data.splice(realIndex, 1);
