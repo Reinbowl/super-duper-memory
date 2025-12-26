@@ -118,6 +118,17 @@ li.delete {
   opacity: 0;
 }
 
+li.pinned {
+  border-left: 4px solid var(--button);
+}
+
+.pin {
+  position: absolute;
+  right: .75rem;
+  top: .75rem;
+  font-size: .9rem;
+  opacity: .6;
+}
 
 .time {
   font-size: .8rem;
@@ -172,6 +183,13 @@ function render() {
 
   thoughts.forEach((entry, displayIndex) => {
     const li = document.createElement("li");
+    if (entry.pinned) {
+      li.classList.add("pinned");
+      const pin = document.createElement("div");
+      pin.className = "pin";
+      pin.textContent = "📌";
+      li.appendChild(pin);
+    }
 
     const time = document.createElement("div");
     time.className = "time";
@@ -203,7 +221,15 @@ function render() {
       // Ignore vertical scroll
       if (Math.abs(deltaY) > Math.abs(deltaX)) return;
 
-      if (deltaX < 0) {
+      // LEFT swipe → delete (only if not pinned)
+      if (deltaX < 0 && !entry.pinned) {
+        e.preventDefault();
+        li.style.transform = `translateX(${deltaX}px)`;
+        swiping = true;
+      }
+    
+      // RIGHT swipe → pin / unpin
+      if (deltaX > 0) {
         e.preventDefault();
         li.style.transform = `translateX(${deltaX}px)`;
         swiping = true;
@@ -213,21 +239,26 @@ function render() {
     li.addEventListener("touchend", () => {
       li.classList.remove("swiping");
 
-      // Swipe threshold
-      if (swiping && deltaX < -80) {
+       // RIGHT swipe threshold → toggle pin
+      if (deltaX > 80) {
+        data[realIndex].pinned = !data[realIndex].pinned;
+        store(data);
+        render();
+        return;
+      }
+    
+      // LEFT swipe threshold → delete (only if not pinned)
+      if (deltaX < -80 && !entry.pinned) {
         li.classList.add("delete");
-
         setTimeout(() => {
-          const realIndex = load().length - 1 - displayIndex;
-          const data = load();
           data.splice(realIndex, 1);
           store(data);
           render();
         }, 200);
-      } else {
-        li.style.transform = "";
+        return;
       }
-
+    
+      li.style.transform = "";
       swiping = false;
       deltaX = 0;
     });
@@ -237,7 +268,11 @@ function render() {
 function saveThought(){
   if(!input.value.trim())return;
   const d=load();
-  d.push({text:input.value.trim(),time:Date.now()});
+  d.push({
+    text: input.value.trim(),
+    time: Date.now(),
+    pinned: false
+  });
   store(d);
   input.value="";
   render();
