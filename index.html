@@ -2,289 +2,217 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shower Thoughts</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
-* { box-sizing: border-box; }
-
-:root {
-  --bg: #f9f9f9;
-  --card: #ffffff;
-  --text: #111111;
-  --subtext: #666666;
-  --border: #cccccc;
-  --button: #007aff;
-}
-
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f0f10;
-    --card: #1c1c1e;
-    --text: #ffffff;
-    --subtext: #9a9a9a;
-    --border: #2c2c2e;
-    --button: #0a84ff;
+    --bg: #f9f9f9; --card: #ffffff; --text: #111111;
+    --subtext: #666666; --border: #cccccc; --button: #007aff;
   }
-}
 
-:root[data-theme="light"] {
-  --bg: #f9f9f9;
-  --card: #ffffff;
-  --text: #111111;
-  --subtext: #666666;
-  --border: #cccccc;
-  --button: #007aff;
-}
-
-:root[data-theme="dark"] {
-  --bg: #0f0f10;
-  --card: #1c1c1e;
-  --text: #ffffff;
-  --subtext: #9a9a9a;
-  --border: #2c2c2e;
-  --button: #0a84ff;
-}
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0f10; --card: #1c1c1e; --text: #ffffff;
+      --subtext: #9a9a9a; --border: #2c2c2e; --button: #0a84ff;
+    }
+  }
   
-body {
-  font-family: -apple-system, system-ui;
-  padding: 1rem;
-  background: var(--bg);
-  color: var(--text);
-}
+  [data-theme="dark"] {
+    --bg: #0f0f10; --card: #1c1c1e; --text: #ffffff;
+    --subtext: #9a9a9a; --border: #2c2c2e; --button: #0a84ff;
+  }
 
-h1 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-textarea, button {
-  width: 100%;
-  font-size: 1rem;
-}
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 20px;
+    background: var(--bg);
+    color: var(--text);
+  }
 
-textarea {
-  padding: .75rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-}
+  .container { max-width: 500px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin-bottom: 1rem; text-align: center; }
 
-button {
-  margin-top: .5rem;
-  padding: .75rem;
-  background: var(--button);
-  color: white;
-  border: none;
-  border-radius: 10px;
-}
+  textarea {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+    resize: none;
+    display: block;
+    outline: none;
+  }
 
-.toggle {
-  background: none;
-  color: var(--subtext);
-  font-size: .9rem;
-  margin-bottom: .75rem;
-}
+  button {
+    width: 100%;
+    margin-top: .75rem;
+    padding: .75rem;
+    background: var(--button);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  
+  button:active { opacity: 0.8; }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-}
+  .toggle {
+    background: none;
+    color: var(--button);
+    font-size: .85rem;
+    margin: 0 auto 1rem auto;
+    width: auto;
+    display: block;
+  }
 
-li {
-  background: var(--card);
-  padding: .75rem;
-  border-radius: 10px;
-  margin-bottom: .75rem;
+  ul { list-style: none; margin-top: 1.5rem; }
 
-  position: relative;
-  overflow: hidden;
-  touch-action: pan-y;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
+  li {
+    background: var(--card);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    touch-action: pan-y;
+  }
 
-li.swiping {
-  transition: none;
-}
+  li.swiping { transition: none; }
+  li.delete { transform: translateX(-100%); opacity: 0; }
+  li.pinned { border-left: 5px solid var(--button); }
 
-li.delete {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-
-li.pinned {
-  border-left: 4px solid var(--button);
-}
-
-.pin {
-  position: absolute;
-  right: .75rem;
-  top: .75rem;
-  font-size: .9rem;
-  opacity: .6;
-}
-
-.time {
-  font-size: .8rem;
-  color: var(--subtext);
-  margin-bottom: .25rem;
-}
+  .pin-icon { position: absolute; right: 1rem; top: 1rem; font-size: 0.8rem; }
+  .time { font-size: 0.75rem; color: var(--subtext); margin-bottom: 4px; }
+  .empty-state { text-align: center; color: var(--subtext); margin-top: 2rem; opacity: 0.6; }
 </style>
 </head>
 
 <body>
-<h1>Shower Thoughts</h1>
-<button class="toggle" onclick="toggleTheme()">change theme</button>
+<div class="container">
+  <h1>Shower Thoughts</h1>
+  <button class="toggle" onclick="toggleTheme()">Change Appearance</button>
 
-<textarea id="input" rows="4" placeholder="write your thought…"></textarea>
-<button onclick="saveThought()">shower</button>
+  <textarea id="input" rows="3" placeholder="What's on your mind?"></textarea>
+  <button onclick="saveThought()">Save Thought</button>
 
-<ul id="list"></ul>
+  <ul id="list"></ul>
+</div>
 
 <script>
+const inputEl = document.getElementById('input');
+const listEl = document.getElementById('list');
+const KEY = "thought_log";
 const THEME_KEY = "theme";
 
+/** Theme **/
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  if (theme === "dark") {
-    document.documentElement.style.colorScheme = "dark";
-  } else {
-    document.documentElement.style.colorScheme = "light";
-  }
+  document.documentElement.style.colorScheme = theme;
 }
 
 function toggleTheme() {
-  const current = localStorage.getItem(THEME_KEY);
+  const current = document.documentElement.dataset.theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const next = current === "dark" ? "light" : "dark";
   localStorage.setItem(THEME_KEY, next);
   applyTheme(next);
 }
 
-// Apply saved theme on load
-const savedTheme = localStorage.getItem(THEME_KEY);
-if (savedTheme) applyTheme(savedTheme);
+if (localStorage.getItem(THEME_KEY)) applyTheme(localStorage.getItem(THEME_KEY));
 
-const KEY="thought_log";
-
-const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
-const store=d=>localStorage.setItem(KEY,JSON.stringify(d));
-const fmt=t=>new Date(t).toLocaleString();
+/** Data **/
+const load = () => JSON.parse(localStorage.getItem(KEY) || "[]");
+const store = (d) => localStorage.setItem(KEY, JSON.stringify(d));
 
 function render() {
-  list.innerHTML = "";
-
+  listEl.innerHTML = "";
   const data = load();
-  const thoughts = data.slice().reverse();
 
-  thoughts.forEach((entry, displayIndex) => {
+  if (data.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">No thoughts yet...</div>';
+    return;
+  }
+
+  // Display thoughts in the order they were created (newest at top)
+  // No secondary sort for pinning
+  const thoughtsToDisplay = data.slice().reverse();
+
+  thoughtsToDisplay.forEach((entry, displayIndex) => {
     const realIndex = data.length - 1 - displayIndex;
     const li = document.createElement("li");
-    if (entry.pinned) {
-      li.classList.add("pinned");
-      const pin = document.createElement("div");
-      pin.className = "pin";
-      pin.textContent = "📌";
-      li.appendChild(pin);
-    }
+    if (entry.pinned) li.classList.add("pinned");
 
-    const time = document.createElement("div");
-    time.className = "time";
-    time.textContent = fmt(entry.time);
+    li.innerHTML = `
+      <div class="time">${new Date(entry.time).toLocaleString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'})}</div>
+      <div class="content"></div>
+      ${entry.pinned ? '<span class="pin-icon">📌</span>' : ''}
+    `;
+    li.querySelector('.content').textContent = entry.text;
 
-    const text = document.createElement("div");
-    text.textContent = entry.text;
-
-    li.appendChild(time);
-    li.appendChild(text);
-    list.appendChild(li);
-
-    // --- Swipe to delete logic ---
-    let startX = 0;
-    let startY = 0;
-    let deltaX = 0;
-    let swiping = false;
+    // --- Swipe Logic ---
+    let startX = 0, deltaX = 0;
 
     li.addEventListener("touchstart", e => {
       startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
       li.classList.add("swiping");
-    });
+    }, {passive: true});
 
     li.addEventListener("touchmove", e => {
       deltaX = e.touches[0].clientX - startX;
-      const deltaY = e.touches[0].clientY - startY;
-
-      // Ignore vertical scroll
-      if (Math.abs(deltaY) > Math.abs(deltaX)) return;
-
-      // LEFT swipe → delete (only if not pinned)
-      if (deltaX < 0) {
-        if (entry.pinned) return;
-        e.preventDefault();
-        li.style.transform = `translateX(${deltaX}px)`;
-        swiping = true;
-      }
-    
-      // RIGHT swipe → pin / unpin
-      if (deltaX > 0) {
-        e.preventDefault();
-        li.style.transform = `translateX(${deltaX}px)`;
-        swiping = true;
-      }
-    });
+      // Constraint: Can't delete pinned items
+      if (deltaX < 0 && entry.pinned) return; 
+      li.style.transform = `translateX(${deltaX}px)`;
+    }, {passive: true});
 
     li.addEventListener("touchend", () => {
       li.classList.remove("swiping");
-
-       // RIGHT swipe threshold → toggle pin
-      if (deltaX > 80) {
+      
+      if (deltaX > 100) { // Swipe Right to Pin
         data[realIndex].pinned = !data[realIndex].pinned;
         store(data);
         render();
-        return;
-      }
-    
-      // LEFT swipe threshold → delete (only if not pinned)
-      if (deltaX < -80 && !entry.pinned) {
+      } else if (deltaX < -100 && !entry.pinned) { // Swipe Left to Delete
         li.classList.add("delete");
         setTimeout(() => {
           data.splice(realIndex, 1);
           store(data);
           render();
         }, 200);
-        return;
+      } else {
+        // Reset position if threshold not met
+        li.style.transform = "translateX(0)";
       }
-    
-      li.style.transform = "";
       deltaX = 0;
     });
+
+    listEl.appendChild(li);
   });
 }
 
-function saveThought(){
-  if(!input.value.trim())return;
-  const d=load();
-  d.push({
-    text: input.value.trim(),
-    time: Date.now(),
-    pinned: false
-  });
-  store(d);
-  input.value="";
+function saveThought() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  const data = load();
+  data.push({ text, time: Date.now(), pinned: false });
+  store(data);
+  inputEl.value = "";
   render();
 }
 
 render();
 window.addEventListener("load", () => {
-  setTimeout(() => input.focus(), 300);
+  setTimeout(() => inputEl.focus(), 300);
 });
-
 </script>
 </body>
 </html>
